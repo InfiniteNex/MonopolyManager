@@ -129,6 +129,7 @@ class _MonopolyState extends State<Monopoly> {
     if (randomNumber == 15){
       amount += 100;
     }
+    _colorShifter();
   }
 
   void _colorShifter(){
