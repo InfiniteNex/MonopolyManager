@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import "dart:math";
+import "dart:math";
 import "package:flutter/services.dart";
 //import "money_color.dart";
 
@@ -16,9 +18,41 @@ class Monopoly extends StatefulWidget {
 
 class _MonopolyState extends State<Monopoly> {
   var amount = 0;
-  //final _rng = Random();
+  Random random = Random();
+  var randomNumber = 0;
   Color _color = Colors.white;
   var selected = 0;
+
+  void _colorShifter(){
+//    if (amount<=0){
+//      amount = 0;
+//    }
+    if (amount<=-1){
+      _color = Colors.red;
+    }
+    if ((amount<=4) & (amount>=0)){
+      _color = Colors.white;
+    }
+    if ((amount>=5) & (amount<=9)){
+      _color = Colors.pink[100];
+    }
+    if ((amount>=10) & (amount<=19)){
+      _color = Colors.cyan[200];
+    }
+    if ((amount>=20) & (amount<=49)){
+      _color = Colors.lightGreen[300];
+    }
+    if ((amount>=50) & (amount<=99)){
+      _color = Colors.purple[200];
+    }
+    if ((amount>=100) & (amount<=499)){
+      _color = Colors.amberAccent;
+    }
+    if (amount>=500){
+      _color = Colors.orange;
+    }
+  }
+
 
   void _settingModalBottomSheet(context){
     showModalBottomSheet(
@@ -57,33 +91,7 @@ class _MonopolyState extends State<Monopoly> {
                             print("Deposit");
                             setState(() {
                               amount += selected;
-//                                if (amount<=0){
-//                                  amount = 0;
-//                                }
-                              if (amount<=-1){
-                                _color = Colors.red;
-                              }
-                              if ((amount<=4) & (amount>=0)){
-                                _color = Colors.white;
-                              }
-                              if ((amount>=5) & (amount<=9)){
-                                _color = Colors.pink[100];
-                              }
-                              if ((amount>=10) & (amount<=19)){
-                                _color = Colors.cyan[200];
-                              }
-                              if ((amount>=20) & (amount<=49)){
-                                _color = Colors.lightGreen[300];
-                              }
-                              if ((amount>=50) & (amount<=99)){
-                                _color = Colors.purple[200];
-                              }
-                              if ((amount>=100) & (amount<=499)){
-                                _color = Colors.amberAccent;
-                              }
-                              if (amount>=500){
-                                _color = Colors.orange;
-                              }
+                              _colorShifter();
                             });
                             },
                           icon: Icon(Icons.add_circle),
@@ -95,33 +103,7 @@ class _MonopolyState extends State<Monopoly> {
                             print("Withdraw");
                             setState(() {
                               amount -= selected;
-//                                if (amount<=0){
-//                                  amount = 0;
-//                                }
-                              if (amount<=-1){
-                                _color = Colors.red;
-                              }
-                              if ((amount<=4) & (amount>=0)){
-                                _color = Colors.white;
-                              }
-                              if ((amount>=5) & (amount<=9)){
-                                _color = Colors.pink[100];
-                              }
-                              if ((amount>=10) & (amount<=19)){
-                                _color = Colors.cyan[200];
-                              }
-                              if ((amount>=20) & (amount<=49)){
-                                _color = Colors.lightGreen[300];
-                              }
-                              if ((amount>=50) & (amount<=99)){
-                                _color = Colors.purple[200];
-                              }
-                              if ((amount>=100) & (amount<=499)){
-                                _color = Colors.amberAccent;
-                              }
-                              if (amount>=500){
-                                _color = Colors.orange;
-                              }
+                              _colorShifter();
                             });
                             },
                           icon: Icon(Icons.remove_circle),
@@ -156,30 +138,7 @@ class _MonopolyState extends State<Monopoly> {
                               print("Go trough start - get 200");
                               setState(() {
                                 amount += 200;
-                                if (amount<=-1){
-                                  _color = Colors.red;
-                                }
-                                if ((amount<=4) & (amount>=0)){
-                                  _color = Colors.white;
-                                }
-                                if ((amount>=5) & (amount<=9)){
-                                  _color = Colors.pink[100];
-                                }
-                                if ((amount>=10) & (amount<=19)){
-                                  _color = Colors.cyan[200];
-                                }
-                                if ((amount>=20) & (amount<=49)){
-                                  _color = Colors.lightGreen[300];
-                                }
-                                if ((amount>=50) & (amount<=99)){
-                                  _color = Colors.purple[200];
-                                }
-                                if ((amount>=100) & (amount<=499)){
-                                  _color = Colors.amberAccent;
-                                }
-                                if (amount>=500){
-                                  _color = Colors.orange;
-                                }
+                                _colorShifter();
                               });
                             },
                             color: Colors.yellowAccent,
@@ -195,33 +154,7 @@ class _MonopolyState extends State<Monopoly> {
                               print("Tax - lose 100");
                               setState(() {
                                 amount -= 100;
-//                                if (amount<=0){
-//                                  amount = 0;
-//                                }
-                                if (amount<=-1){
-                                  _color = Colors.red;
-                                }
-                                if ((amount<=4) & (amount>=0)){
-                                  _color = Colors.white;
-                                }
-                                if ((amount>=5) & (amount<=9)){
-                                  _color = Colors.pink[100];
-                                }
-                                if ((amount>=10) & (amount<=19)){
-                                  _color = Colors.cyan[200];
-                                }
-                                if ((amount>=20) & (amount<=49)){
-                                  _color = Colors.lightGreen[300];
-                                }
-                                if ((amount>=50) & (amount<=99)){
-                                  _color = Colors.purple[200];
-                                }
-                                if ((amount>=100) & (amount<=499)){
-                                  _color = Colors.amberAccent;
-                                }
-                                if (amount>=500){
-                                  _color = Colors.orange;
-                                }
+                                _colorShifter();
                               });
                             },
                             color: Colors.red,
@@ -237,33 +170,7 @@ class _MonopolyState extends State<Monopoly> {
                               print("Tax - lose 200");
                               setState(() {
                                 amount -= 200;
-//                                if (amount<=0){
-//                                  amount = 0;
-//                                }
-                                if (amount<=-1){
-                                  _color = Colors.red;
-                                }
-                                if ((amount<=4) & (amount>=0)){
-                                  _color = Colors.white;
-                                }
-                                if ((amount>=5) & (amount<=9)){
-                                  _color = Colors.pink[100];
-                                }
-                                if ((amount>=10) & (amount<=19)){
-                                  _color = Colors.cyan[200];
-                                }
-                                if ((amount>=20) & (amount<=49)){
-                                  _color = Colors.lightGreen[300];
-                                }
-                                if ((amount>=50) & (amount<=99)){
-                                  _color = Colors.purple[200];
-                                }
-                                if ((amount>=100) & (amount<=499)){
-                                  _color = Colors.amberAccent;
-                                }
-                                if (amount>=500){
-                                  _color = Colors.orange;
-                                }
+                                _colorShifter();
                               });
                             },
                             color: Colors.red,
@@ -284,6 +191,32 @@ class _MonopolyState extends State<Monopoly> {
         }
     ).whenComplete(() {
       selected = 0;
+    });
+  }
+
+
+  void _chanceModalBottomSheet(context){
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc){
+          return Container(
+            child: Text("chance $randomNumber"),
+          );
+        }
+    ).whenComplete(() {
+    });
+  }
+
+
+  void _communityModalBottomSheet(context){
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc){
+          return Container(
+            child: Text("community chest $randomNumber"),
+          );
+        }
+    ).whenComplete(() {
     });
   }
 
@@ -380,8 +313,10 @@ class _MonopolyState extends State<Monopoly> {
                     GestureDetector(
                       onTap: (){
                         //print("chance");
-                        SnackBar mysnackbar = SnackBar(content: Text("Chance!"), duration: Duration(milliseconds: 500),);
-                        Scaffold.of(context).showSnackBar(mysnackbar);
+                        //SnackBar mysnackbar = SnackBar(content: Text("Chance!"), duration: Duration(milliseconds: 500),);
+                        //Scaffold.of(context).showSnackBar(mysnackbar);
+                        randomNumber = random.nextInt(16) + 1; // from 1 up to 16 included
+                        _chanceModalBottomSheet(context);
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(10, 200, 0, 0),
@@ -395,8 +330,10 @@ class _MonopolyState extends State<Monopoly> {
                     GestureDetector(
                       onTap: (){
                         print("community");
-                        SnackBar mysnackbar = SnackBar(content: Text("Community!"), duration: Duration(milliseconds: 500),);
-                        Scaffold.of(context).showSnackBar(mysnackbar);
+                        //SnackBar mysnackbar = SnackBar(content: Text("Community!"), duration: Duration(milliseconds: 500),);
+                        //Scaffold.of(context).showSnackBar(mysnackbar);
+                        randomNumber = random.nextInt(17) + 1; // from 1 up to 16 included
+                        _communityModalBottomSheet(context);
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(10, 200, 0, 0),
@@ -413,7 +350,6 @@ class _MonopolyState extends State<Monopoly> {
                   color: Colors.grey,
                   child: Image.asset("assets/jail_free.png"),
                 ),
-
               ],
             ),
           ),
