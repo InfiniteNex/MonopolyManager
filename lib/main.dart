@@ -25,43 +25,111 @@ class _MonopolyState extends State<Monopoly> {
   var selectedCard;
 
   List<String> chance = [
-  "Advance to Go (Collect \$200)",
-  "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.",
-  "Advance token to the nearest Railroad and pay owner twice the rental to which he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.",
-  "Get Out of Jail Free",
-  "Go Back 3 Spaces",
-  "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200",
-  "You have been elected Chairman of the Board–Pay each player \$50",
-  "Make general repairs on all your property–For each house pay \$25–For each hotel \$100",
-  "Your building and loan matures—Collect \$150",
-  "Pay poor tax of \$15",
-  "Bank pays you dividend of \$50",
-  "Take a trip to Reading Railroad–If you pass Go, collect \$200",
-  "Take a walk on the Boardwalk–Advance token to Boardwalk",
-  "You have won a crossword competition—Collect \$100",
-  "Advance to Illinois Ave—If you pass Go, collect \$200",
-  "Advance to St. Charles Place – If you pass Go, collect \$200",
+  "Advance to Go (Collect \$200)", //done
+  "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.", //TODO add function
+  "Advance token to the nearest Railroad and pay owner twice the rental to which he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.", //TODO add function
+  "Get Out of Jail Free", //TODO add function
+  "Go Back 3 Spaces", //nothing to do
+  "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200", //nothing to do
+  "You have been elected Chairman of the Board–Pay each player \$50", //TODO add function
+  "Make general repairs on all your property–For each house pay \$25–For each hotel \$100", //TODO add function
+  "Your building and loan matures—Collect \$150", //done
+  "Pay poor tax of \$15", //done
+  "Bank pays you dividend of \$50", //done
+  "Take a trip to Reading Railroad–If you pass Go, collect \$200", //TODO add function
+  "Take a walk on the Boardwalk–Advance token to Boardwalk", //nothing to do
+  "You have won a crossword competition—Collect \$100", //done
+  "Advance to Illinois Ave—If you pass Go, collect \$200", //TODO add function
+  "Advance to St. Charles Place – If you pass Go, collect \$200", //TODO add function
   ];
 
   List<String> chest = [
-  "Advance to Go (Collect \$200)",
-  "Bank error in your favor—Collect \$200",
-  "Doctor's fee—Pay \$50",
-  "Get Out of Jail Free",
-  "From sale of stock you get \$50",
-  "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200",
-  "It is your birthday—Collect \$10",
-  "Holiday Fund matures—Receive \$100",
-  "Income tax refund–Collect \$20",
-  "Life insurance matures–Collect \$100",
-  "Pay hospital fees of \$100",
-  "Pay school fees of \$150",
-  "Receive \$25 consultancy fee",
-  "You are assessed for street repairs–\$40 per house–\$115 per hotel",
-  "You have won second prize in a beauty contest–Collect \$10",
-  "You inherit \$100",
+  "Advance to Go (Collect \$200)", //done
+  "Bank error in your favor—Collect \$200", //done
+  "Doctor's fee—Pay \$50", //done
+  "Get Out of Jail Free", //done
+  "From sale of stock you get \$50", //done
+  "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200", //nothing to do
+  "It is your birthday—Collect \$10", //done
+  "Holiday Fund matures—Receive \$100", //done
+  "Income tax refund–Collect \$20", //done
+  "Life insurance matures–Collect \$100", //done
+  "Pay hospital fees of \$100", //done
+  "Pay school fees of \$150", //done
+  "Receive \$25 consultancy fee", //done
+  "You are assessed for street repairs–\$40 per house–\$115 per hotel", //TODO add function
+  "You have won second prize in a beauty contest–Collect \$10", //done
+  "You inherit \$100", //done
   ];
 
+
+  void _chanceDirectBanking(){
+    if (randomNumber == 0){
+      amount += 200;
+    }
+    if (randomNumber == 3){
+      print("Jail Free card collected");
+    }
+    if (randomNumber == 8){
+      amount += 150;
+    }
+    if (randomNumber == 9){
+      amount -= 15;
+    }
+    if (randomNumber == 10){
+      amount += 50;
+    }
+    if (randomNumber == 13){
+      amount += 100;
+    }
+    _colorShifter();
+  }
+
+
+  void _chestDirectBanking(){
+    if (randomNumber == 0){
+      amount += 200;
+    }
+    if (randomNumber == 1){
+      amount += 200;
+    }
+    if (randomNumber == 2){
+      amount -= 50;
+    }
+    if (randomNumber == 3){
+      print("Jail Free card collected");
+    }
+    if (randomNumber == 4){
+      amount += 50;
+    }
+    if (randomNumber == 6){
+      amount += 10;
+    }
+    if (randomNumber == 7){
+      amount += 100;
+    }
+    if (randomNumber == 8){
+      amount += 20;
+    }
+    if (randomNumber == 9){
+      amount += 100;
+    }
+    if (randomNumber == 10){
+      amount -= 100;
+    }
+    if (randomNumber == 11){
+      amount -= 150;
+    }
+    if (randomNumber == 12){
+      amount += 25;
+    }
+    if (randomNumber == 14){
+      amount += 10;
+    }
+    if (randomNumber == 15){
+      amount += 100;
+    }
+  }
 
   void _colorShifter(){
 //    if (amount<=0){
@@ -128,7 +196,7 @@ class _MonopolyState extends State<Monopoly> {
                         ),
                         IconButton(
                           onPressed: (){
-                            print("Deposit");
+                            //print("Deposit");
                             setState(() {
                               amount += selected;
                               _colorShifter();
@@ -140,7 +208,7 @@ class _MonopolyState extends State<Monopoly> {
                         ),
                         IconButton(
                           onPressed: (){
-                            print("Withdraw");
+                            //print("Withdraw");
                             setState(() {
                               amount -= selected;
                               _colorShifter();
@@ -248,7 +316,7 @@ class _MonopolyState extends State<Monopoly> {
                   padding: EdgeInsets.all(20),
                     child: Text(
                         "$selectedCard",
-                      style: TextStyle(
+                        style: TextStyle(
                         fontFamily: "Rye"
                       ),
                     )
@@ -378,12 +446,15 @@ class _MonopolyState extends State<Monopoly> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: (){
-                        //print("chance");
-                        //SnackBar mysnackbar = SnackBar(content: Text("Chance!"), duration: Duration(milliseconds: 500),);
-                        //Scaffold.of(context).showSnackBar(mysnackbar);
-                        randomNumber = random.nextInt(16); // from 0 up to 15 included
-                        selectedCard = chance[randomNumber];
-                        _chanceModalBottomSheet(context);
+                        setState(() {
+                          //print("chance");
+                          //SnackBar mysnackbar = SnackBar(content: Text("Chance!"), duration: Duration(milliseconds: 500),);
+                          //Scaffold.of(context).showSnackBar(mysnackbar);
+                          randomNumber = random.nextInt(16); // from 0 up to 15 included
+                          selectedCard = chance[randomNumber];
+                          _chanceDirectBanking();
+                          _chanceModalBottomSheet(context);
+                        });
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(10, 200, 0, 0),
@@ -396,12 +467,15 @@ class _MonopolyState extends State<Monopoly> {
                       ),),
                     GestureDetector(
                       onTap: (){
-                        print("community");
-                        //SnackBar mysnackbar = SnackBar(content: Text("Community!"), duration: Duration(milliseconds: 500),);
-                        //Scaffold.of(context).showSnackBar(mysnackbar);
-                        randomNumber = random.nextInt(16); // from 0 up to 15 included
-                        selectedCard = chest[randomNumber];
-                        _communityModalBottomSheet(context);
+                        setState(() {
+                          //print("community");
+                          //SnackBar mysnackbar = SnackBar(content: Text("Community!"), duration: Duration(milliseconds: 500),);
+                          //Scaffold.of(context).showSnackBar(mysnackbar);
+                          randomNumber = random.nextInt(16); // from 0 up to 15 included
+                          selectedCard = chest[randomNumber];
+                          _chestDirectBanking();
+                          _communityModalBottomSheet(context);
+                        });
                       },
                       child: Container(
                         margin: EdgeInsets.fromLTRB(10, 200, 0, 0),
