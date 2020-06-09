@@ -1,9 +1,15 @@
+//import 'dart:html';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "package:flutter/services.dart";
 
-var opponents = 1; // AT LEAST 1 OPPONENT BY DEFAULT //TODO change the opponents class to integers
+var opponents = 1; // AT LEAST 1 OPPONENT BY DEFAULT
+var possessedHouses = 0;
+var possessedHotels = 0;
+bool jailCard = false;
+Color _jailColor = Colors.grey[800];
+
 
 void main() => runApp(MaterialApp(
   home: Monopoly(),
@@ -23,45 +29,44 @@ class _MonopolyState extends State<Monopoly> {
   var selected = 0;
   var selectedCard;
 
-  var possessedHouses = 0;
-  var possessedHotels = 0;
+
 
   List<String> chance = [
-    "Advance to Go (Collect \$200)", //done
+    "Advance to Go (Collect \$200)",
     "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.", //TODO add function
     "Advance token to the nearest Railroad and pay owner twice the rental to which he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.", //TODO add function
-    "Get Out of Jail Free", //TODO add function
-    "Go Back 3 Spaces", //nothing to do
-    "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200", //nothing to do
-    "You have been elected Chairman of the Board–Pay each player \$50", //TODO add function
-    "Make general repairs on all your property–For each house pay \$25–For each hotel \$100", //TODO add function
-    "Your building and loan matures—Collect \$150", //done
-    "Pay poor tax of \$15", //done
-    "Bank pays you dividend of \$50", //done
-    "Take a trip to Reading Railroad–If you pass Go, collect \$200", //TODO add function
-    "Take a walk on the Boardwalk–Advance token to Boardwalk", //nothing to do
-    "You have won a crossword competition—Collect \$100", //done
-    "Advance to Illinois Ave—If you pass Go, collect \$200", //TODO add function
-    "Advance to St. Charles Place – If you pass Go, collect \$200", //TODO add function
+    "Get Out of Jail Free",
+    "Go Back 3 Spaces",
+    "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200",
+    "You have been elected Chairman of the Board–Pay each player \$50",
+    "Make general repairs on all your property–For each house pay \$25–For each hotel \$100",
+    "Your building and loan matures—Collect \$150",
+    "Pay poor tax of \$15",
+    "Bank pays you dividend of \$50",
+    "Take a trip to Reading Railroad–If you pass Go, collect \$200",
+    "Take a walk on the Boardwalk–Advance token to Boardwalk",
+    "You have won a crossword competition—Collect \$100",
+    "Advance to Illinois Ave—If you pass Go, collect \$200",
+    "Advance to St. Charles Place – If you pass Go, collect \$200",
   ];
 
   List<String> chest = [
-    "Advance to Go (Collect \$200)", //done
-    "Bank error in your favor—Collect \$200", //done
-    "Doctor's fee—Pay \$50", //done
-    "Get Out of Jail Free", //done
-    "From sale of stock you get \$50", //done
-    "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200", //nothing to do
-    "It is your birthday—Collect \$10", //done
-    "Holiday Fund matures—Receive \$100", //done
-    "Income tax refund–Collect \$20", //done
-    "Life insurance matures–Collect \$100", //done
-    "Pay hospital fees of \$100", //done
-    "Pay school fees of \$150", //done
-    "Receive \$25 consultancy fee", //done
-    "You are assessed for street repairs–\$40 per house–\$115 per hotel", //TODO add function
-    "You have won second prize in a beauty contest–Collect \$10", //done
-    "You inherit \$100", //done
+    "Advance to Go (Collect \$200)",
+    "Bank error in your favor—Collect \$200",
+    "Doctor's fee—Pay \$50",
+    "Get Out of Jail Free",
+    "From sale of stock you get \$50",
+    "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200",
+    "It is your birthday—Collect \$10",
+    "Holiday Fund matures—Receive \$100",
+    "Income tax refund–Collect \$20",
+    "Life insurance matures–Collect \$100",
+    "Pay hospital fees of \$100",
+    "Pay school fees of \$150",
+    "Receive \$25 consultancy fee",
+    "You are assessed for street repairs–\$40 per house–\$115 per hotel",
+    "You have won second prize in a beauty contest–Collect \$10",
+    "You inherit \$100",
   ];
 
 
@@ -71,12 +76,11 @@ class _MonopolyState extends State<Monopoly> {
     if (randomNumber == 0){
       amount += 200;
     }
-    else if (randomNumber == 3){
-      print("Jail Free card collected");
-    }
     else if (randomNumber == 6) {
-      // PAY EACH PLAYER $50
       amount -= (50*opponents);
+    }
+    else if (randomNumber == 7){
+      amount -= (25*possessedHouses)+(100*possessedHotels);
     }
     else if (randomNumber == 8){
       amount += 150;
@@ -129,6 +133,9 @@ class _MonopolyState extends State<Monopoly> {
     }
     if (randomNumber == 12){
       amount += 25;
+    }
+    if (randomNumber == 13){
+      amount -= (40*possessedHouses)+(115*possessedHotels);
     }
     if (randomNumber == 14){
       amount += 10;
@@ -252,7 +259,7 @@ class _MonopolyState extends State<Monopoly> {
                           child: RaisedButton(
                             padding: EdgeInsets.all(10),
                             onPressed: (){
-                              print("Go trough start - get 200");
+                              //print("Go trough start - get 200");
                               setState(() {
                                 amount += 200;
                                 _colorShifter();
@@ -260,7 +267,20 @@ class _MonopolyState extends State<Monopoly> {
                             },
                             color: Colors.yellowAccent,
                             elevation: 10,
-                            child: Text("Start - get 200"),
+                            child: Column(
+                              children: <Widget>[
+                                Text("Pass Start",
+                                    style: TextStyle(
+                                        fontFamily: "Rye",
+                                        fontSize: 15
+                                    )),
+                                Text("Get \$200",
+                                    style: TextStyle(
+                                        fontFamily: "Rye",
+                                        fontSize: 15
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
                         ButtonTheme(
@@ -268,7 +288,7 @@ class _MonopolyState extends State<Monopoly> {
                           height: 100,
                           child: RaisedButton(
                             onPressed: (){
-                              print("Tax - lose 100");
+                              //print("Tax - lose 100");
                               setState(() {
                                 amount -= 100;
                                 _colorShifter();
@@ -276,7 +296,20 @@ class _MonopolyState extends State<Monopoly> {
                             },
                             color: Colors.red,
                             elevation: 10,
-                            child: Text("Tax - lose 100"),
+                            child: Column(
+                              children: <Widget>[
+                                Text("Tax",
+                                    style: TextStyle(
+                                        fontFamily: "Rye",
+                                        fontSize: 15
+                                    )),
+                                Text("Pay \$100",
+                                    style: TextStyle(
+                                        fontFamily: "Rye",
+                                        fontSize: 15
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
                         ButtonTheme(
@@ -284,7 +317,7 @@ class _MonopolyState extends State<Monopoly> {
                           height: 100,
                           child: RaisedButton(
                             onPressed: (){
-                              print("Tax - lose 200");
+                              //print("Tax - lose 200");
                               setState(() {
                                 amount -= 200;
                                 _colorShifter();
@@ -292,7 +325,20 @@ class _MonopolyState extends State<Monopoly> {
                             },
                             color: Colors.red,
                             elevation: 10,
-                            child: Text("Tax - lose 200"),
+                            child: Column(
+                              children: <Widget>[
+                                Text("Tax",
+                                    style: TextStyle(
+                                        fontFamily: "Rye",
+                                        fontSize: 15
+                                    )),
+                                Text("Pay \$200",
+                                    style: TextStyle(
+                                        fontFamily: "Rye",
+                                        fontSize: 15
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -313,44 +359,123 @@ class _MonopolyState extends State<Monopoly> {
 
 
   _dynamicChance() {
-    if (randomNumber == 6) {
+    if (randomNumber == 3){
+      print("Jail Free card collected");
+      _jailColor = Colors.white;
+      return Text("");
+    }
+    else if (randomNumber == 6) {
       var temp = (50*opponents);
       return Text("Amount payed to opponents: $temp");
+    }
+    else if (randomNumber == 7){
+      var temp = (25*possessedHouses)+(100*possessedHotels);
+      return Text("Amount payed: $temp");
+    }
+    else if (randomNumber == 11){
+      return RaisedButton(
+        onPressed: (){
+          setState(() {
+            Navigator.pop(context);
+            amount += 200;
+          });
+        },
+        child: Text(
+          "Pass through start - get \$200",
+          style: TextStyle(
+              fontFamily: "Rye",
+              fontSize: 20
+          ),
+        ),
+      );
+    }
+    else if (randomNumber == 14){
+      return RaisedButton(
+        onPressed: (){
+          setState(() {
+            Navigator.pop(context);
+            amount += 200;
+          });
+        },
+        child: Text(
+          "Pass through start - get \$200",
+          style: TextStyle(
+              fontFamily: "Rye",
+              fontSize: 20
+          ),
+        ),
+      );
+    }
+    else if (randomNumber == 15){
+      return RaisedButton(
+        onPressed: (){
+          setState(() {
+            Navigator.pop(context);
+            amount += 200;
+          });
+        },
+        child: Text(
+          "Pass through start - get \$200",
+          style: TextStyle(
+              fontFamily: "Rye",
+              fontSize: 20
+          ),
+        ),
+      );
     }
     else {
       return Text("");
     }
   }
 
-  _dynamicChest() {
-    return Text("");
 
+  _dynamicChest() {
+    if (randomNumber == 3){
+      print("Jail Free card collected");
+      _jailColor = Colors.white;
+      return Text("");
+    }
+    else if (randomNumber == 13){
+      var temp = (40*possessedHouses)+(115*possessedHotels);
+      return Text("Amount payed: $temp");
+    }
+    else {
+      return Text("");
+    }
   }
 
-  void _chanceModalBottomSheet(context){
+
+  void _chanceModalBottomSheet(dynamic){
     showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.grey,
         context: context,
         builder: (BuildContext bc){
-          return Container(
-              color: Colors.grey,
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: <Widget>[
-                  Card(
-                      margin: EdgeInsets.all(20),
-                      child: Container(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            "$selectedCard",
-                            style: TextStyle(
-                                fontFamily: "Rye"
-                            ),
-                          )
-                      )
-                  ),
+          return Wrap(
+            children: <Widget>[
+              Container(
+                color: Colors.grey,
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Card(
+                        margin: EdgeInsets.all(20),
+                        child: Container(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              "$selectedCard",
+                              style: TextStyle(
+                                  fontFamily: "Rye"
+                              ),
+                            )
+                        )
+                    ),
                   _dynamicChance(),
                 ],
               )
+          )
+            ],
           );
         }
     ).whenComplete(() {
@@ -358,30 +483,36 @@ class _MonopolyState extends State<Monopoly> {
   }
 
 
-  void _communityModalBottomSheet(context){
+  void _communityModalBottomSheet(dynamic){
     showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.grey,
         context: context,
         builder: (BuildContext bc){
-          return Container(
-            color: Colors.grey,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                Card(
-                    margin: EdgeInsets.all(20),
-                    child: Container(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          "$selectedCard",
-                          style: TextStyle(
-                              fontFamily: "Rye"
-                          ),
-                        )
-                    )
-                ),
-                _dynamicChest()
-              ],
-            )
+          return Wrap(
+            children: <Widget>[
+              Container(
+                color: Colors.grey,
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: <Widget>[
+                      Card(
+                          margin: EdgeInsets.all(20),
+                          child: Container(
+                              padding: EdgeInsets.all(20),
+                              child: Text(
+                                "$selectedCard",
+                                style: TextStyle(
+                                    fontFamily: "Rye"
+                                ),
+                              )
+                          )
+                      ),
+                      _dynamicChest()
+                    ],
+                  )
+              )
+            ],
           );
         }
     ).whenComplete(() {
@@ -389,6 +520,95 @@ class _MonopolyState extends State<Monopoly> {
   }
 
 
+  void _housingModalBottomSheet(dynamic){
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext bc){
+                return Wrap(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Image.asset("assets/house.png", scale: 2,),
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        possessedHouses += 1;
+                                      });
+                                    },
+                                    icon: Icon(Icons.add_circle),
+                                    color: Colors.green,
+                                    iconSize: 60,
+                                  ),
+                                  IconButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        if (possessedHouses != 0) {
+                                          possessedHouses -= 1;
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(Icons.remove_circle),
+                                    color: Colors.red,
+                                    iconSize: 60,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                              children: <Widget>[
+                                Image.asset("assets/hotel.png", scale: 2,),
+                                Row(
+                                  children: <Widget>[
+                                    IconButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          possessedHotels += 1;
+                                        });
+                                      },
+                                      icon: Icon(Icons.add_circle),
+                                      color: Colors.green,
+                                      iconSize: 60,
+                                    ),
+                                    IconButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          if (possessedHotels != 0) {
+                                            possessedHotels -= 1;
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(Icons.remove_circle),
+                                      color: Colors.red,
+                                      iconSize: 60,
+                                    ),
+                                  ],
+                                ),
+                              ]
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+        }
+    );//.whenComplete((){});
+  }
+
+
+
+  
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -536,21 +756,35 @@ class _MonopolyState extends State<Monopoly> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      Container(
-                        color: Colors.grey,
-                        child: Image.asset(
-                          "assets/jail_free.png",
-                          scale: 1.5,
+                      GestureDetector(
+                        child: Container(
+                          color: _jailColor,
+                          child: Image.asset(
+                            "assets/jail_free.png",
+                            scale: 1.5,
+                          ),
                         ),
+                        onTap: (){
+                          setState(() {
+                            _jailColor = Colors.grey[800];
+                          });
+                        },
                       ),
+                      Text(
+                          "Tap when jail card is used up.",
+                        style: TextStyle(
+                            fontFamily: "Rye",
+                            fontSize: 12
+                        ),
+                      )
                     ],
                   ), //PRISON CARD
                   GestureDetector(
                     onTap: (){
-                      setState(() { //TODO redo function for houses and hotels
-                        SnackBar mysnackbar = SnackBar(content: Text("Future houses and hotels menu"), duration: Duration(milliseconds: 1000),);
-                        Scaffold.of(context).showSnackBar(mysnackbar);
-                        possessedHouses += 1;
+                      setState(() {
+//                        SnackBar mysnackbar = SnackBar(content: Text("Future houses and hotels menu"), duration: Duration(milliseconds: 1000),);
+//                        Scaffold.of(context).showSnackBar(mysnackbar);
+                          _housingModalBottomSheet(context);
                       });
                     },
                     child: Card(
@@ -587,7 +821,6 @@ class _MonopolyState extends State<Monopoly> {
                       ),
                     ),
                   ),
-
                 ],
               ), //PRISON CARD, HOTELS AND HOUSES
               SizedBox(
@@ -642,6 +875,7 @@ class _MonopolyState extends State<Monopoly> {
                           //opponents = 1; // AT LEAST 1 OPPONENT BY DEFAULT
                           possessedHouses = 0;
                           possessedHotels = 0;
+                          _jailColor = Colors.grey[800];
                         });
                       },
                     )
@@ -682,12 +916,27 @@ class _DropDownMenuState extends State<DropDownMenu> {
           print(opponents);
         });
       },
-      items: <String>['1', '2', '3', '4', '5', '6', '7'].map<DropdownMenuItem<String>>((String val) { //TODO  convert list to int
+      items: <String>['1', '2', '3', '4', '5', '6', '7'].map<DropdownMenuItem<String>>((String val) {
         return DropdownMenuItem<String>(
           value: val,
           child: Text(val),
         );
       }).toList(),
     );
+  }
+}
+
+
+
+
+class HousingMenu extends StatefulWidget {
+  @override
+  _HousingMenuState createState() => _HousingMenuState();
+}
+class _HousingMenuState extends State<HousingMenu> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
