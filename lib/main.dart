@@ -1,8 +1,11 @@
-//import 'dart:html';
+import 'dart:io';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import "package:flutter/services.dart";
+import 'package:admob_flutter/admob_flutter.dart';
+import "package:monopolymanager/admob_service.dart";
 
 var opponents = 1; // AT LEAST 1 OPPONENT BY DEFAULT
 var possessedHouses = 0;
@@ -11,9 +14,14 @@ bool jailCard = false;
 Color _jailColor = Colors.grey[800];
 
 
-void main() => runApp(MaterialApp(
-  home: Monopoly(),
-));
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  FirebaseAdMob.instance.initialize(appId: AdMobService().getAdMobAppID());
+  runApp(MaterialApp(
+    home: Monopoly(),
+  ));
+}
+
 
 class Monopoly extends StatefulWidget {
   @override
@@ -28,6 +36,17 @@ class _MonopolyState extends State<Monopoly> {
   Color _color = Colors.white;
   var selected = 0;
   var selectedCard;
+
+  final ams = AdMobService();
+
+
+  @override
+  void initState(){
+    super.initState();
+    Admob.initialize(ams.getAdMobAppID());
+
+  }
+
 
 
 
@@ -611,6 +630,8 @@ class _MonopolyState extends State<Monopoly> {
   
   @override
   Widget build(BuildContext context) {
+    InterstitialAd newAd = ams.getInterAd();
+    newAd.load();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -726,8 +747,14 @@ class _MonopolyState extends State<Monopoly> {
                         elevation: 10,
                         child: Image.asset("assets/chance_question.png"),),
                     ),),
-                  SizedBox(
-                    width: 20,
+//                  SizedBox(
+//                    width: 20,
+//                  ),
+                  RaisedButton(
+                    child: Text("Int.Ad"),
+                    onPressed: () async {
+                      newAd.show();
+                    },
                   ),
                   GestureDetector(
                     onTap: (){
@@ -882,6 +909,11 @@ class _MonopolyState extends State<Monopoly> {
                   ],
                 ),
               ), //SETTINGS
+              AdmobBanner(
+                adUnitId: ams.getBannerAdID(),
+                adSize: AdmobBannerSize.FULL_BANNER,
+              ),
+
             ],
           );
         },)
@@ -940,3 +972,7 @@ class _HousingMenuState extends State<HousingMenu> {
     return Container();
   }
 }
+
+
+
+
