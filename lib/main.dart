@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 //import 'package:flutter/cupertino.dart';
 import 'package:firebase_admob/firebase_admob.dart';
@@ -10,9 +9,46 @@ import "package:monopolymanager/admob_service.dart";
 var opponents = 1; // AT LEAST 1 OPPONENT BY DEFAULT
 var possessedHouses = 0;
 var possessedHotels = 0;
-bool jailCard = false;
 Color _jailColor = Colors.grey[800];
+var adDisplayCounter = 0;
 
+List<String> chance = [
+  "Advance to Go. Collected \$200",
+  "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.",
+  "Advance token to the nearest Railroad and pay owner twice the rental to which he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.",
+  "Get Out of Jail Free",
+  "Go Back 3 Spaces",
+  "Go to Jail - Go directly to Jail. Do not pass Go, do not collect \$200",
+  "You have been elected Chairman of the Board – Payed each player \$50 \n (based on Opponents selected under Settings)",
+  "Make general repairs on all your property – For each house pay \$25. For each hotel \$100",
+  "Your building and loan matures — Collected \$150",
+  "Pay poor tax of \$15",
+  "Bank pays you dividend of \$50",
+  "Take a trip to Reading Railroad – If you pass Go, collect \$200 (press button under card if passed through Go)",
+  "Take a walk on the Boardwalk – Advance token to Boardwalk",
+  "You have won a crossword competition — Collected \$100",
+  "Advance to Illinois Ave — If you pass Go, collect \$200 (press button under card if passed through Go)",
+  "Advance to St. Charles Place – If you pass Go, collect \$200 (press button under card if passed through Go)",
+];
+
+List<String> chest = [
+  "Advance to Go. Collected \$200",
+  "Bank error in your favor — \$200",
+  "Doctor's fee — \$50",
+  "Get Out of Jail Free",
+  "From sale of stock you get \$50",
+  "Go to Jail – Go directly to Jail. Do not pass Go, do not collect \$200",
+  "It is your birthday — You got \$10",
+  "Holiday Fund matures — You Received \$100",
+  "Income tax refund – Collected \$20",
+  "Life insurance matures – Collected \$100",
+  "Pay hospital fees of \$100",
+  "Pay school fees of \$150",
+  "Receive \$25 consultancy fee",
+  "You are assessed for street repairs – \$40 per house–\$115 per hotel",
+  "You have won second prize in a beauty contest – Collected \$10",
+  "You inherit \$100",
+];
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,50 +80,7 @@ class _MonopolyState extends State<Monopoly> {
   void initState(){
     super.initState();
     Admob.initialize(ams.getAdMobAppID());
-
   }
-
-
-
-
-  List<String> chance = [
-    "Advance to Go (Collect \$200)",
-    "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.", //TODO add function
-    "Advance token to the nearest Railroad and pay owner twice the rental to which he/she {he} is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.", //TODO add function
-    "Get Out of Jail Free",
-    "Go Back 3 Spaces",
-    "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200",
-    "You have been elected Chairman of the Board–Pay each player \$50",
-    "Make general repairs on all your property–For each house pay \$25–For each hotel \$100",
-    "Your building and loan matures—Collect \$150",
-    "Pay poor tax of \$15",
-    "Bank pays you dividend of \$50",
-    "Take a trip to Reading Railroad–If you pass Go, collect \$200",
-    "Take a walk on the Boardwalk–Advance token to Boardwalk",
-    "You have won a crossword competition—Collect \$100",
-    "Advance to Illinois Ave—If you pass Go, collect \$200",
-    "Advance to St. Charles Place – If you pass Go, collect \$200",
-  ];
-
-  List<String> chest = [
-    "Advance to Go (Collect \$200)",
-    "Bank error in your favor—Collect \$200",
-    "Doctor's fee—Pay \$50",
-    "Get Out of Jail Free",
-    "From sale of stock you get \$50",
-    "Go to Jail–Go directly to Jail–Do not pass Go, do not collect \$200",
-    "It is your birthday—Collect \$10",
-    "Holiday Fund matures—Receive \$100",
-    "Income tax refund–Collect \$20",
-    "Life insurance matures–Collect \$100",
-    "Pay hospital fees of \$100",
-    "Pay school fees of \$150",
-    "Receive \$25 consultancy fee",
-    "You are assessed for street repairs–\$40 per house–\$115 per hotel",
-    "You have won second prize in a beauty contest–Collect \$10",
-    "You inherit \$100",
-  ];
-
 
 
 
@@ -120,46 +113,43 @@ class _MonopolyState extends State<Monopoly> {
     if (randomNumber == 0){
       amount += 200;
     }
-    if (randomNumber == 1){
+    else if (randomNumber == 1){
       amount += 200;
     }
-    if (randomNumber == 2){
+    else if (randomNumber == 2){
       amount -= 50;
     }
-    if (randomNumber == 3){
-      print("Jail Free card collected");
-    }
-    if (randomNumber == 4){
+    else if (randomNumber == 4){
       amount += 50;
     }
-    if (randomNumber == 6){
+    else if (randomNumber == 6){
       amount += 10;
     }
-    if (randomNumber == 7){
+    else if (randomNumber == 7){
       amount += 100;
     }
-    if (randomNumber == 8){
+    else if (randomNumber == 8){
       amount += 20;
     }
-    if (randomNumber == 9){
+    else if (randomNumber == 9){
       amount += 100;
     }
-    if (randomNumber == 10){
+    else if (randomNumber == 10){
       amount -= 100;
     }
-    if (randomNumber == 11){
+    else if (randomNumber == 11){
       amount -= 150;
     }
-    if (randomNumber == 12){
+    else if (randomNumber == 12){
       amount += 25;
     }
-    if (randomNumber == 13){
+    else if (randomNumber == 13){
       amount -= (40*possessedHouses)+(115*possessedHotels);
     }
-    if (randomNumber == 14){
+    else if (randomNumber == 14){
       amount += 10;
     }
-    if (randomNumber == 15){
+    else if (randomNumber == 15){
       amount += 100;
     }
     _colorShifter();
@@ -173,25 +163,25 @@ class _MonopolyState extends State<Monopoly> {
     if (amount<=-1){
       _color = Colors.red;
     }
-    if ((amount<=4) & (amount>=0)){
+    else if ((amount<=4) & (amount>=0)){
       _color = Colors.white;
     }
-    if ((amount>=5) & (amount<=9)){
+    else if ((amount>=5) & (amount<=9)){
       _color = Colors.pink[100];
     }
-    if ((amount>=10) & (amount<=19)){
+    else if ((amount>=10) & (amount<=19)){
       _color = Colors.cyan[200];
     }
-    if ((amount>=20) & (amount<=49)){
+    else if ((amount>=20) & (amount<=49)){
       _color = Colors.lightGreen[300];
     }
-    if ((amount>=50) & (amount<=99)){
+    else if ((amount>=50) & (amount<=99)){
       _color = Colors.purple[200];
     }
-    if ((amount>=100) & (amount<=499)){
+    else if ((amount>=100) & (amount<=499)){
       _color = Colors.amberAccent;
     }
-    if (amount>=500){
+    else if (amount>=500){
       _color = Colors.orange;
     }
   }
@@ -215,7 +205,7 @@ class _MonopolyState extends State<Monopoly> {
                             borderRadius: BorderRadius.all(Radius.circular(10.0)),)
                       ),
                       onSubmitted: (val) {
-                        print("$val");
+//                        print("$val");
                         selected = int.parse(val);
                       },
                     ),
@@ -378,18 +368,48 @@ class _MonopolyState extends State<Monopoly> {
 
 
   _dynamicChance() {
-    if (randomNumber == 3){
-      print("Jail Free card collected");
+    if (randomNumber == 1) {
+      return Text("Manual action required.",
+      style: TextStyle(
+          color: Colors.red,
+          fontFamily: "Rye",
+          fontSize: 20
+      ),
+      );
+    }
+    else if (randomNumber == 2) {
+      return Text("Manual action required.",
+        style: TextStyle(
+            color: Colors.red,
+            fontFamily: "Rye",
+            fontSize: 20
+        ),
+      );
+    }
+    else if (randomNumber == 3){
       _jailColor = Colors.white;
-      return Text("");
+      return Text("If jail card already owned pull a new one.",
+      style: TextStyle(
+          fontFamily: "Rye",
+        fontSize: 20,
+      ),
+      );
     }
     else if (randomNumber == 6) {
       var temp = (50*opponents);
-      return Text("Amount payed to opponents: $temp");
+      return Text("Amount payed to opponents: $temp",
+        style: TextStyle(
+            fontFamily: "Rye",
+            fontSize: 20
+        ),);
     }
     else if (randomNumber == 7){
       var temp = (25*possessedHouses)+(100*possessedHotels);
-      return Text("Amount payed: $temp");
+      return Text("Amount payed: $temp",
+        style: TextStyle(
+            fontFamily: "Rye",
+            fontSize: 20
+        ),);
     }
     else if (randomNumber == 11){
       return RaisedButton(
@@ -450,19 +470,35 @@ class _MonopolyState extends State<Monopoly> {
 
   _dynamicChest() {
     if (randomNumber == 3){
-      print("Jail Free card collected");
       _jailColor = Colors.white;
-      return Text("");
+      return Text("If jail card already owned pull a new one.",
+        style: TextStyle(
+          fontFamily: "Rye",
+          fontSize: 20,
+        ),);
     }
     else if (randomNumber == 13){
       var temp = (40*possessedHouses)+(115*possessedHotels);
-      return Text("Amount payed: $temp");
+      return Text("Amount payed: $temp",
+        style: TextStyle(
+            fontFamily: "Rye",
+            fontSize: 20
+        ),);
     }
     else {
       return Text("");
     }
   }
 
+  _chanceCardSelect(){
+    randomNumber = random.nextInt(4); // from 0 up to 15 included
+    selectedCard = chance[randomNumber];
+  }
+
+  _chestCardSelect(){
+    randomNumber = random.nextInt(4); // from 0 up to 15 included
+    selectedCard = chest[randomNumber];
+  }
 
   void _chanceModalBottomSheet(dynamic){
     showModalBottomSheet(
@@ -659,7 +695,6 @@ class _MonopolyState extends State<Monopoly> {
                       GestureDetector(
                         onTap: (){
                           _moneyModalBottomSheet(context);
-                          //_color = Color.fromRGBO(_rng.nextInt(256), _rng.nextInt(256), _rng.nextInt(256), 1);
                         },
                         child: Container(
                           width: 330,
@@ -733,11 +768,9 @@ class _MonopolyState extends State<Monopoly> {
                       setState(() {
                         //SnackBar mysnackbar = SnackBar(content: Text("Chance!"), duration: Duration(milliseconds: 500),);
                         //Scaffold.of(context).showSnackBar(mysnackbar);
-                        randomNumber = random.nextInt(16); // from 0 up to 15 included
-                        selectedCard = chance[randomNumber];
-                        _chanceDirectBanking();
+                        _chanceCardSelect();
                         _chanceModalBottomSheet(context);
-                        _colorShifter();
+                        _chanceDirectBanking();
                       });
                     },
                     child: Container(
@@ -747,24 +780,27 @@ class _MonopolyState extends State<Monopoly> {
                         elevation: 10,
                         child: Image.asset("assets/chance_question.png"),),
                     ),),
-//                  SizedBox(
-//                    width: 20,
-//                  ),
-                  RaisedButton(
-                    child: Text("Int.Ad"),
-                    onPressed: () async {
-                      newAd.show();
-                    },
+                  SizedBox(
+                    width: 20,
                   ),
+//                  RaisedButton(
+//                    child: Text("Int.Ad"),
+//                    onPressed: () async {
+//                      adDisplayCounter += 1;
+//                      if (adDisplayCounter == 50){
+//                        newAd.show();
+//                        adDisplayCounter = 0;
+//                      }
+//                    },
+//                  ), //TODO INTERSTITIAL AD BUTTON
                   GestureDetector(
                     onTap: (){
                       setState(() {
                         //SnackBar mysnackbar = SnackBar(content: Text("Community!"), duration: Duration(milliseconds: 500),);
                         //Scaffold.of(context).showSnackBar(mysnackbar);
-                        randomNumber = random.nextInt(16); // from 0 up to 15 included
-                        selectedCard = chest[randomNumber];
-                        _chestDirectBanking();
+                        _chestCardSelect();
                         _communityModalBottomSheet(context);
+                        _chestDirectBanking();
                       });
                     },
                     child: Container(
@@ -791,9 +827,14 @@ class _MonopolyState extends State<Monopoly> {
                             scale: 1.5,
                           ),
                         ),
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             _jailColor = Colors.grey[800];
+                            adDisplayCounter += 1;
+                            if (adDisplayCounter == 3){
+                              newAd.show();
+                              adDisplayCounter = 0;
+                            }
                           });
                         },
                       ),
@@ -911,7 +952,7 @@ class _MonopolyState extends State<Monopoly> {
               ), //SETTINGS
               AdmobBanner(
                 adUnitId: ams.getBannerAdID(),
-                adSize: AdmobBannerSize.FULL_BANNER,
+                adSize: AdmobBannerSize.BANNER,
               ),
 
             ],
@@ -945,7 +986,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
         setState(() {
           dropdownValue = newValue;
           opponents = int.parse(dropdownValue);
-          print(opponents);
+//          print(opponents);
         });
       },
       items: <String>['1', '2', '3', '4', '5', '6', '7'].map<DropdownMenuItem<String>>((String val) {
@@ -975,4 +1016,5 @@ class _HousingMenuState extends State<HousingMenu> {
 
 
 
-
+// TODO history of cards and payments
+//TODO about section
